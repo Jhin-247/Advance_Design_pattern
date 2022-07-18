@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">DesignPattern</string>
+    <string name="car_builder">Car builder</string>
+    <string name="create">Create</string>
+    <string name="brand">Brand</string>
+    <string name="car_type">Car type</string>
+    <string name="year_model">Year model</string>
+
+    <string-array name="brand">
+        <item>Huyndai</item>
+        <item>Kia</item>
+    </string-array>
+
+    <string-array name="car_type">
+        <item>SUV</item>
+        <item>TRUCK</item>
+        <item>SPORT</item>
+    </string-array>
+</resources>
