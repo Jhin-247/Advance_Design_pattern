@@ -1,11 +1,8 @@
 package com.tuan.designpattern;
 
 import com.tuan.designpattern.builder.Builder;
-import com.tuan.designpattern.builder.HuyndaiCarBuilder;
-import com.tuan.designpattern.builder.KiaCarBuilder;
 import com.tuan.designpattern.model.Car;
 import com.tuan.designpattern.model.CarType;
-import com.tuan.designpattern.model.Engine;
 
 public class OEMDirector {
     public void createSUVCar(Builder builder){
@@ -21,37 +18,6 @@ public class OEMDirector {
     }
 
     public Car process(Builder builder){
-        if(builder instanceof HuyndaiCarBuilder){
-            builder.setSeats(4);
-            Engine engine = new Engine();
-            switch (((HuyndaiCarBuilder) builder).getCarType()){
-                case SUV:
-                    engine.setHorsePower(1000);
-                    break;
-                case TRUCK:
-                    engine.setHorsePower(2000);
-                    break;
-                case SPORT:
-                    engine.setHorsePower(3000);
-                    break;
-            }
-            builder.setEngine(engine);
-        } else if (builder instanceof KiaCarBuilder){
-            builder.setSeats(8);
-            Engine engine = new Engine();
-            switch (((KiaCarBuilder) builder).getCarType()){
-                case SUV:
-                    engine.setHorsePower(1000);
-                    break;
-                case TRUCK:
-                    engine.setHorsePower(2000);
-                    break;
-                case SPORT:
-                    engine.setHorsePower(3000);
-                    break;
-            }
-            builder.setEngine(engine);
-        }
         return builder.build();
     }
 }

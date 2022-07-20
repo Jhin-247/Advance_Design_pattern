@@ -5,6 +5,12 @@
     <string name="brand">Brand</string>
     <string name="car_type">Car type</string>
     <string name="year_model">Year model</string>
+    <string name="air_bags">Air bags</string>
+
+    <string name="car_brand_saved">Brand: %1$s</string>
+    <string name="car_type_saved">Type: %1$s</string>
+    <string name="car_engine_saved">Engine: %1$d (horse power)</string>
+    <string name="car_air_bag_saved">Air bag: %1$d</string>
 
     <string-array name="brand">
         <item>Huyndai</item>

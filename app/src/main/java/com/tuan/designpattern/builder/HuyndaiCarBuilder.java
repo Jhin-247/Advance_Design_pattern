@@ -4,40 +4,55 @@ import com.tuan.designpattern.model.Car;
 import com.tuan.designpattern.model.CarType;
 import com.tuan.designpattern.model.Engine;
 
-public class HuyndaiCarBuilder implements Builder{
-    private int seats;
-    private CarType carType;
-    private Engine engine;
-
-    @Override
-    public void setSeats(int seats) {
-        this.seats = seats;
-    }
-
-    @Override
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }
-
-    @Override
-    public void setCarType(CarType carType) {
-        this.carType = carType;
-    }
+public class HuyndaiCarBuilder implements Builder {
+    private int mSeats;
+    private CarType mCarType;
+    private Engine mEngine;
 
     @Override
     public Car build() {
-        return new Car(seats,carType,engine);
+        if (this.mEngine == null) {
+            Engine engine = new Engine();
+            switch (mCarType) {
+                case SUV:
+                    engine.setHorsePower(1000);
+                    break;
+                case TRUCK:
+                    engine.setHorsePower(2000);
+                    break;
+                case SPORT:
+                    engine.setHorsePower(3000);
+                    break;
+            }
+            mEngine = engine;
+        }
+        return new Car("Huyndai", mSeats, mCarType, mEngine);
     }
 
     public int getSeats() {
-        return seats;
+        return mSeats;
+    }
+
+    @Override
+    public void setSeats(int mSeats) {
+        this.mSeats = mSeats;
     }
 
     public CarType getCarType() {
-        return carType;
+        return mCarType;
+    }
+
+    @Override
+    public void setCarType(CarType mCarType) {
+        this.mCarType = mCarType;
     }
 
     public Engine getEngine() {
-        return engine;
+        return mEngine;
+    }
+
+    @Override
+    public void setEngine(Engine mEngine) {
+        this.mEngine = mEngine;
     }
 }

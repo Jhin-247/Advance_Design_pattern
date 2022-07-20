@@ -1,12 +1,14 @@
 package com.tuan.designpattern;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ListPopupWindow;
 
 import com.tuan.designpattern.builder.Builder;
 import com.tuan.designpattern.builder.HuyndaiCarBuilder;
@@ -17,6 +19,7 @@ import com.tuan.designpattern.singleton.MySingleton;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     ActivityMainBinding mBinding;
@@ -26,25 +29,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+        List<String> mBrand = Arrays.asList(getResources().getStringArray(R.array.brand));
 
-        mBinding.rltBrand.setOnClickListener(v -> {
-            List<String> data = Arrays.asList(getResources().getStringArray(R.array.brand));
-            setupAndShowWindowList(mBinding.brand, data);
-        });
-        mBinding.rltCarTypeDown.setOnClickListener(v -> {
-            List<String> data = Arrays.asList(getResources().getStringArray(R.array.car_type));
-            setupAndShowWindowList(mBinding.type, data);
+        ArrayAdapter mBrandAdapter = new ArrayAdapter(this, R.layout.spinner_item, mBrand);
+        mBinding.brand.setAdapter(mBrandAdapter);
+
+        List<String> mType = Arrays.asList(getResources().getStringArray(R.array.car_type));
+        ArrayAdapter mTypeAdapter = new ArrayAdapter(this, R.layout.spinner_item, mType);
+        mBinding.type.setAdapter(mTypeAdapter);
+
+        mBinding.brand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (mBinding.brand.getItemAtPosition(position).toString().equals("Kia")) {
+                    mBinding.layoutAirBag.setVisibility(View.VISIBLE);
+                } else {
+                    mBinding.layoutAirBag.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
-        mBinding.btnCreate.setOnClickListener(v -> {
-            createOrUpdateCurrentCar();
-        });
+        mBinding.btnCreate.setOnClickListener(v -> createOrUpdateCurrentCar());
     }
 
     private void createOrUpdateCurrentCar() {
         Builder builder = null;
-        Log.i(TAG, "createOrUpdateCurrentCar: " + mBinding.type.getText().toString());
-        switch (mBinding.brand.getText().toString()) {
+        Log.i(TAG, "createOrUpdateCurrentCar: " + mBinding.type.getSelectedItem().toString());
+        switch (mBinding.brand.getSelectedItem().toString()) {
             case "Kia":
                 builder = new KiaCarBuilder();
                 break;
@@ -53,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         OEMDirector oemDirector = new OEMDirector();
-        switch (mBinding.type.getText().toString()) {
+        switch (mBinding.type.getSelectedItem().toString()) {
             case "SUV":
                 if (builder != null) {
                     oemDirector.createSUVCar(builder);
@@ -65,38 +81,27 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case "SPORT":
-                assert builder != null;
-                oemDirector.createSPORTCar(builder);
+                if (builder != null) {
+                    oemDirector.createSPORTCar(builder);
+                }
                 break;
         }
         if (builder != null) {
+            if (builder instanceof KiaCarBuilder) {
+                if (!mBinding.etAirBag.getText().toString().equals("")) {
+                    ((KiaCarBuilder) builder).setAirbags(Integer.parseInt(mBinding.etAirBag.getText().toString()));
+                }
+            }
             MySingleton.getInstance().setCar(oemDirector.process(builder));
-        } else
+            navigateActivity();
+        } else {
             Toast.makeText(this, "Có lỗi", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
-    private void setupAndShowWindowList(View anchorView, List<String> data) {
-        ListPopupWindow mPopupWindow = new ListPopupWindow(this);
-        mPopupWindow.setAnchorView(anchorView);
-        mPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
-        mPopupWindow.setModal(true);
-
-        ListPopupWindowAdapter mAdapter = new ListPopupWindowAdapter(
-                this,
-                data,
-                position -> {
-                    if (anchorView.getId() == mBinding.brand.getId()) {
-                        mBinding.brand.setText(data.get(position));
-                    } else {
-                        mBinding.type.setText(data.get(position));
-                    }
-                    mPopupWindow.dismiss();
-                });
-
-        mPopupWindow.setAdapter(mAdapter);
-        mPopupWindow.show();
+    private void navigateActivity() {
+        startActivity(new Intent(this, DetailActivity.class));
     }
-
 
 }
