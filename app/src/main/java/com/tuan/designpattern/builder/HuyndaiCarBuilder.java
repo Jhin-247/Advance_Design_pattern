@@ -11,21 +11,6 @@ public class HuyndaiCarBuilder implements Builder {
 
     @Override
     public Car build() {
-        if (this.mEngine == null) {
-            Engine engine = new Engine();
-            switch (mCarType) {
-                case SUV:
-                    engine.setHorsePower(1000);
-                    break;
-                case TRUCK:
-                    engine.setHorsePower(2000);
-                    break;
-                case SPORT:
-                    engine.setHorsePower(3000);
-                    break;
-            }
-            mEngine = engine;
-        }
         return new Car("Huyndai", mSeats, mCarType, mEngine);
     }
 

@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mBinding.btnCreate.setOnClickListener(v -> createOrUpdateCurrentCar());
+        mBinding.btnNext.setOnClickListener(v -> {
+            if (MySingleton.getInstance().getCar() == null) {
+                Toast.makeText(this, "Save or create car first", Toast.LENGTH_SHORT).show();
+            } else {
+                navigateActivity();
+            }
+        });
     }
 
     private void createOrUpdateCurrentCar() {
@@ -93,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             MySingleton.getInstance().setCar(oemDirector.process(builder));
-            navigateActivity();
+            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Có lỗi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please try again", Toast.LENGTH_SHORT).show();
         }
 
     }
